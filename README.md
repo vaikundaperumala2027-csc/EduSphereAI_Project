@@ -1,2 +1,18 @@
-# EduSphereAI_Project
-AI-powered educational platform designed to provide personalized learning, smart assistance, and an interactive student experience.
+# EduSphere AI
+
+AI + IoT + Android + Security Platform
+
+## Modules
+- AI Placement Assistant
+- Android Student Hub
+- IoT Classroom Monitoring
+- Security Dashboard
+
+## Tech Stack
+- Python Flask
+- MySQL
+- Firebase
+- ESP32
+- Kotlin
+
+Author: lovely_perumal__
