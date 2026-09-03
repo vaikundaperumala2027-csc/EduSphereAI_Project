@@ -1,8 +1,245 @@
 <!DOCTYPE html>
-<html>
-<head><title>EduSphere AI</title></head>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>EduSphere | Student Hub</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+		:root { --ink:#17221f; --muted:#72807a; --line:#e4e9e4; --paper:#f6f8f4; --white:#fff; --green:#1e6b51; --mint:#dff1e8; --yellow:#f6c85f; --coral:#eb866e; }
+		* { box-sizing:border-box; }
+		body { margin:0; color:var(--ink); background:var(--paper); font:14px 'DM Sans', sans-serif; }
+		button { font:inherit; cursor:pointer; }
+		.app { display:grid; grid-template-columns:240px 1fr; min-height:100vh; }
+		aside { display:flex; flex-direction:column; padding:28px 18px; background:var(--white); border-right:1px solid var(--line); }
+		.brand { display:flex; align-items:center; gap:10px; margin:0 10px 48px; font:700 19px 'Space Grotesk', sans-serif; }
+		.brand-mark { display:grid; place-items:center; width:30px; height:30px; color:white; background:var(--green); border-radius:9px; font-size:16px; }
+		.nav-label { margin:0 12px 12px; color:#a0aaa4; font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; }
+		nav { display:grid; gap:5px; }
+		.nav-item { display:flex; align-items:center; gap:13px; padding:12px; color:var(--muted); border:0; border-radius:10px; background:transparent; text-align:left; }
+		.nav-item:hover, .nav-item.active { color:var(--green); background:var(--mint); font-weight:700; }
+		.nav-icon { width:18px; text-align:center; font-size:17px; }
+		.side-bottom { margin-top:auto; padding:18px 12px 0; border-top:1px solid var(--line); }
+		.student-mini { display:flex; align-items:center; gap:10px; }
+		.avatar { display:grid; place-items:center; flex:0 0 auto; width:38px; height:38px; color:#90533f; background:#f5d9ce; border-radius:50%; font-weight:700; }
+		.student-mini strong { display:block; font-size:13px; }
+		.student-mini span { color:var(--muted); font-size:11px; }
+		main { max-width:1380px; width:100%; padding:28px 4.5vw 48px; }
+		.topbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:38px; }
+		.mobile-menu { display:none; }
+		.eyebrow { margin:0 0 5px; color:var(--green); font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+		h1,h2,h3,p { margin-top:0; } h1 { margin-bottom:8px; font:700 clamp(25px,3vw,36px) 'Space Grotesk', sans-serif; letter-spacing:-.5px; } h2 { margin-bottom:20px; font:600 19px 'Space Grotesk', sans-serif; }
+		.top-actions { display:flex; align-items:center; gap:13px; }
+		.icon-button { position:relative; display:grid; place-items:center; width:39px; height:39px; color:var(--ink); border:1px solid var(--line); border-radius:10px; background:white; }
+		.dot { position:absolute; top:8px; right:8px; width:6px; height:6px; background:var(--coral); border:1px solid white; border-radius:50%; }
+		.date { color:var(--muted); font-size:12px; }
+		.welcome { display:flex; justify-content:space-between; align-items:end; margin-bottom:30px; }
+		.welcome-copy { color:var(--muted); font-size:15px; }
+		.streak { padding:12px 17px; color:#6d5410; background:#fff4d6; border:1px solid #f1dea6; border-radius:12px; font-weight:700; }
+		.streak span { display:block; margin-top:2px; color:#9a7b28; font-size:11px; font-weight:500; }
+		.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin-bottom:34px; }
+		.stat { padding:19px; background:white; border:1px solid var(--line); border-radius:13px; }
+		.stat-top { display:flex; justify-content:space-between; color:var(--muted); font-size:12px; font-weight:600; }
+		.stat-icon { font-size:18px; } .stat-value { margin:13px 0 3px; font:700 27px 'Space Grotesk', sans-serif; } .stat-note { color:var(--green); font-size:11px; font-weight:600; }
+		.grid { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr); gap:20px; }
+		.panel { padding:22px; background:white; border:1px solid var(--line); border-radius:13px; }
+		.panel-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; } .panel-head h2 { margin:0; }
+		.link-button { padding:3px 0; color:var(--green); border:0; background:none; font-size:12px; font-weight:700; }
+		.schedule { display:grid; gap:10px; margin-top:19px; }
+		.class-row { display:grid; grid-template-columns:67px 1fr auto; align-items:center; gap:13px; padding:13px 0; border-bottom:1px solid #edf0ed; } .class-row:last-child { border:0; }
+		.time { color:var(--muted); font-size:12px; } .class-title { font-weight:700; } .class-meta { margin-top:4px; color:var(--muted); font-size:11px; }
+		.class-tag { padding:5px 8px; border-radius:6px; background:var(--mint); color:var(--green); font-size:10px; font-weight:700; } .class-tag.yellow { color:#86660d; background:#fff2cc; }
+		.tasks { display:grid; gap:13px; margin-top:19px; } .task { display:flex; align-items:center; gap:11px; } .task input { accent-color:var(--green); width:16px; height:16px; } .task small { display:block; margin-top:3px; color:var(--muted); font-size:11px; } .task.done strong { color:#9ba59f; text-decoration:line-through; }
+		.notice { padding:14px 0; border-bottom:1px solid #edf0ed; } .notice:last-child { border:0; } .notice strong { display:block; margin-bottom:5px; font-size:13px; } .notice p { margin:0; color:var(--muted); font-size:11px; line-height:1.5; }
+		.progress-wrap { margin-top:20px; padding-top:18px; border-top:1px solid var(--line); } .progress-label { display:flex; justify-content:space-between; margin-bottom:8px; font-size:12px; font-weight:600; } .progress-label span { color:var(--green); } .progress { height:7px; overflow:hidden; background:#edf0ed; border-radius:5px; } .progress i { display:block; width:78%; height:100%; background:var(--green); border-radius:inherit; }
+		.login-screen { display:grid; place-items:center; min-height:100vh; padding:24px; background:radial-gradient(circle at 15% 10%, #dff1e8 0, transparent 31%), var(--paper); }
+		.login-card { width:min(100%, 410px); padding:36px; background:white; border:1px solid var(--line); border-radius:16px; box-shadow:0 18px 55px rgba(23,34,31,.08); }
+		.login-card .brand { margin:0 0 42px; } .login-card h1 { font-size:29px; } .login-copy { color:var(--muted); line-height:1.5; }
+		.login-form { display:grid; gap:16px; margin-top:28px; } .field { display:grid; gap:7px; color:var(--ink); font-size:12px; font-weight:700; }
+		.field input { width:100%; padding:13px 14px; color:var(--ink); border:1px solid var(--line); border-radius:9px; background:#fbfcfa; outline:none; font:inherit; }
+		.field input:focus { border-color:var(--green); box-shadow:0 0 0 3px var(--mint); } .login-button { padding:13px; color:white; border:0; border-radius:9px; background:var(--green); font-weight:700; } .login-button:disabled { opacity:.65; cursor:wait; }
+		.login-error { min-height:16px; margin:0; color:#bd5542; font-size:12px; }
+		.admin-panel { margin-bottom:34px; padding:22px; color:white; background:var(--green); border-radius:13px; }
+		.admin-panel h2 { margin-bottom:4px; color:white; } .admin-copy { margin:0 0 18px; color:#cbe6da; font-size:12px; }
+		.admin-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; } .admin-stat { padding:13px; background:rgba(255,255,255,.12); border-radius:9px; }
+		.admin-stat span { display:block; color:#cbe6da; font-size:11px; } .admin-stat strong { display:block; margin-top:7px; font:700 25px 'Space Grotesk', sans-serif; }
+		.admin-form { display:grid; grid-template-columns:1fr 2fr auto; gap:10px; align-items:end; margin-top:18px; } .admin-form .field { color:#cbe6da; } .admin-form .field input { padding:10px; background:white; } .admin-form button { padding:10px 14px; color:var(--green); border:0; border-radius:8px; background:var(--yellow); font-weight:700; }
+		@media (max-width:850px) { .app { grid-template-columns:1fr; } aside { display:none; } main { padding:22px 18px 35px; } .mobile-menu { display:grid; } .topbar { margin-bottom:27px; } .welcome { align-items:start; gap:15px; flex-direction:column; } .stats { grid-template-columns:repeat(2,1fr); } .grid { grid-template-columns:1fr; } }
+		@media (max-width:430px) { .stats { gap:9px; } .stat { padding:14px; } .stat-value { font-size:23px; } .date { display:none; } .panel { padding:17px; } .admin-panel { padding:17px; } .admin-stats { grid-template-columns:repeat(2,1fr); } .admin-form { grid-template-columns:1fr; } }
+	</style>
+</head>
 <body>
-<h1>Welcome to EduSphere AI</h1>
-<p>Project Starter Template</p>
+	<section class="login-screen" id="login-screen">
+		<div class="login-card">
+			<div class="brand"><span class="brand-mark">e</span> EduSphere</div>
+			<p class="eyebrow">Student Hub</p>
+			<h1>Welcome back.</h1>
+			<p class="login-copy">Sign in to continue to your learning workspace.</p>
+			<form class="login-form" id="login-form">
+				<label class="field">College email<input id="email" type="email" autocomplete="email" placeholder="you@college.edu" required></label>
+				<label class="field">Password<input id="password" type="password" autocomplete="current-password" placeholder="Enter your password" required></label>
+				<p class="login-error" id="login-error" role="alert"></p>
+				<button class="login-button" type="submit">Sign in to EduSphere</button>
+			</form>
+		</div>
+	</section>
+	<div class="app" id="app" hidden>
+		<aside>
+			<div class="brand"><span class="brand-mark">e</span> EduSphere</div>
+			<p class="nav-label">Workspace</p>
+			<nav>
+				<button class="nav-item active"><span class="nav-icon">⌂</span>Overview</button>
+				<button class="nav-item"><span class="nav-icon">▣</span>My Courses</button>
+				<button class="nav-item"><span class="nav-icon">◷</span>Attendance</button>
+				<button class="nav-item"><span class="nav-icon">✓</span>Assignments</button>
+				<button class="nav-item"><span class="nav-icon">▤</span>Resources</button>
+			</nav>
+			<p class="nav-label" style="margin-top:32px">Connect</p>
+			<nav><button class="nav-item"><span class="nav-icon">♧</span>Community</button><button class="nav-item"><span class="nav-icon">⚙</span>Settings</button></nav>
+			<div class="side-bottom"><div class="student-mini"><div class="avatar">AR</div><div><strong>Arun Raj</strong><span>Computer Science</span></div></div></div>
+		</aside>
+		<main>
+			<div class="topbar"><button class="icon-button mobile-menu" aria-label="Open menu">☰</button><span class="date">Thursday, 03 September 2026</span><div class="top-actions"><button class="icon-button" aria-label="Notifications">♢<span class="dot"></span></button><button class="icon-button" id="logout-button" aria-label="Sign out">↪</button><div class="avatar">AR</div></div></div>
+			<section class="welcome"><div><p class="eyebrow">Student Hub</p><h1>Good morning, Arun.</h1><p class="welcome-copy">Here is your learning pulse for today.</p></div><div class="streak">🔥 12 day streak<span>Keep your momentum going</span></div></section>
+			<section class="stats">
+				<article class="stat"><div class="stat-top"><span>Attendance</span><span class="stat-icon">◉</span></div><div class="stat-value" id="attendance-value">92.4%</div><div class="stat-note">Live from attendance records</div></article>
+				<article class="stat"><div class="stat-top"><span>Course progress</span><span class="stat-icon">◔</span></div><div class="stat-value" id="progress-value">68%</div><div class="stat-note">Live from course progress</div></article>
+				<article class="stat"><div class="stat-top"><span>Current GPA</span><span class="stat-icon">✦</span></div><div class="stat-value">8.7</div><div class="stat-note">Top 12% of your class</div></article>
+				<article class="stat"><div class="stat-top"><span>Assignments</span><span class="stat-icon">✓</span></div><div class="stat-value" id="assignments-value">04</div><div class="stat-note">Pending assignments</div></article>
+			</section>
+			<section class="admin-panel" id="admin-panel" hidden><h2>Admin overview</h2><p class="admin-copy">Live platform activity at a glance.</p><div class="admin-stats"><div class="admin-stat"><span>Students</span><strong id="admin-students">-</strong></div><div class="admin-stat"><span>Courses</span><strong id="admin-courses">-</strong></div><div class="admin-stat"><span>Assignments</span><strong id="admin-assignments">-</strong></div><div class="admin-stat"><span>Notices</span><strong id="admin-notices">-</strong></div></div><form class="admin-form" id="admin-notice-form"><label class="field">Notice title<input id="notice-title" maxlength="180" required></label><label class="field">Message<input id="notice-body" required></label><button type="submit">Publish notice</button></form></section>
+			<div class="grid">
+				<section class="panel"><div class="panel-head"><h2>Today's schedule</h2><button class="link-button">View calendar →</button></div><div class="schedule"><div class="class-row"><span class="time">09:00 AM</span><div><div class="class-title">Data Structures & Algorithms</div><div class="class-meta">Dr. Meera Krishnan · Room 204</div></div><span class="class-tag">In progress</span></div><div class="class-row"><span class="time">11:30 AM</span><div><div class="class-title">Database Management Systems</div><div class="class-meta">Prof. Karthik S. · Lab 03</div></div><span class="class-tag yellow">Upcoming</span></div><div class="class-row"><span class="time">02:00 PM</span><div><div class="class-title">AI & Machine Learning</div><div class="class-meta">Dr. Priya Nair · Room 108</div></div><span class="class-tag yellow">Upcoming</span></div></div></section>
+				<section class="panel"><div class="panel-head"><h2>Quick tasks</h2><button class="link-button">See all →</button></div><div class="tasks" id="tasks-list"><label class="task"><input type="checkbox" checked><span><strong>Read chapter 4: Graphs</strong><small>Data Structures · Due today</small></span></label><label class="task"><input type="checkbox"><span><strong>Submit SQL lab report</strong><small>DBMS · Due tomorrow</small></span></label><label class="task"><input type="checkbox"><span><strong>Complete ML quiz</strong><small>AI & ML · Due Friday</small></span></label></div><div class="progress-wrap"><div class="progress-label">Weekly completion <span>78%</span></div><div class="progress"><i></i></div></div></section>
+				<section class="panel"><div class="panel-head"><h2>Latest notices</h2><button class="link-button">All notices →</button></div><div id="notices-list"><div class="notice"><strong>Hackathon registrations are open</strong><p>Join the 24-hour campus build challenge. Registrations close on 10 Sep.</p></div><div class="notice"><strong>Internal assessment schedule</strong><p>Your IA-2 schedule has been published. Check your calendar for details.</p></div><div class="notice"><strong>Library hours extended</strong><p>The central library will remain open until 9:00 PM during assessment week.</p></div></div></section>
+				<section class="panel"><div class="panel-head"><h2>Learning snapshot</h2><button class="link-button">My courses →</button></div><div class="progress-wrap" style="margin-top:4px;border:0;padding-top:0"><div class="progress-label">Data Structures <span>84%</span></div><div class="progress"><i style="width:84%"></i></div></div><div class="progress-wrap"><div class="progress-label">Database Systems <span>72%</span></div><div class="progress"><i style="width:72%"></i></div></div><div class="progress-wrap"><div class="progress-label">AI & Machine Learning <span>48%</span></div><div class="progress"><i style="width:48%;background:var(--coral)"></i></div></div></section>
+			</div>
+		</main>
+	</div>
+	<script>
+		const loginScreen = document.getElementById('login-screen');
+		const app = document.getElementById('app');
+		const loginForm = document.getElementById('login-form');
+		const loginError = document.getElementById('login-error');
+
+		function showDashboard(user) {
+			loginScreen.hidden = true;
+			app.hidden = false;
+			document.querySelector('.welcome h1').textContent = 'Good morning, ' + user.full_name.split(' ')[0] + '.';
+			document.querySelectorAll('.avatar').forEach(function (avatar) {
+				avatar.textContent = user.full_name.split(' ').map(function (name) { return name[0]; }).join('').slice(0, 2).toUpperCase();
+			});
+			document.querySelector('.student-mini strong').textContent = user.full_name;
+			document.querySelector('.student-mini span').textContent = user.department;
+		}
+
+		function renderDashboardData(data) {
+			if (data.stats) {
+				document.getElementById('attendance-value').textContent = data.stats.attendance + '%';
+				document.getElementById('progress-value').textContent = data.stats.course_progress + '%';
+				document.getElementById('assignments-value').textContent = String(data.stats.pending_assignments).padStart(2, '0');
+			}
+			function escapeHtml(value) {
+				return String(value).replace(/[&<>'"]/g, function (character) {
+					return {'&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'}[character];
+				});
+			}
+			if (data.assignments && data.assignments.length) {
+				document.getElementById('tasks-list').innerHTML = data.assignments.map(function (assignment) {
+					return '<label class="task' + (assignment.completed ? ' done' : '') + '" data-assignment-id="' + assignment.id + '"><input type="checkbox" ' + (assignment.completed ? 'checked' : '') + '><span><strong>' + escapeHtml(assignment.title) + '</strong><small>' + escapeHtml(assignment.course_name) + ' · Due ' + escapeHtml(assignment.due_date) + '</small></span></label>';
+				}).join('');
+			}
+			if (data.notices && data.notices.length) {
+				document.getElementById('notices-list').innerHTML = data.notices.map(function (notice) {
+					return '<div class="notice"><strong>' + escapeHtml(notice.title) + '</strong><p>' + escapeHtml(notice.body) + '</p></div>';
+				}).join('');
+			}
+		}
+
+		async function loadAdminOverview(user) {
+			if (user.role !== 'admin') return;
+			const response = await fetch('/api/admin/overview');
+			if (!response.ok) return;
+			const data = await response.json();
+			document.getElementById('admin-panel').hidden = false;
+			document.getElementById('admin-students').textContent = data.students;
+			document.getElementById('admin-courses').textContent = data.courses;
+			document.getElementById('admin-assignments').textContent = data.assignments;
+			document.getElementById('admin-notices').textContent = data.notices;
+		}
+
+		async function restoreSession() {
+			try {
+				const response = await fetch('/api/dashboard');
+				if (!response.ok) throw new Error('Session expired');
+				const data = await response.json();
+				localStorage.setItem('edusphere_user', JSON.stringify(data.user));
+				showDashboard(data.user);
+				renderDashboardData(data);
+				loadAdminOverview(data.user);
+			} catch (error) {
+				localStorage.removeItem('edusphere_user');
+			}
+		}
+		restoreSession();
+
+		loginForm.addEventListener('submit', async function (event) {
+			event.preventDefault();
+			const button = loginForm.querySelector('button');
+			button.disabled = true;
+			loginError.textContent = '';
+			try {
+				const response = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: document.getElementById('email').value, password: document.getElementById('password').value }) });
+				const result = await response.json();
+				if (!response.ok) throw new Error(result.error || 'Unable to sign in');
+				localStorage.setItem('edusphere_user', JSON.stringify(result.user));
+				showDashboard(result.user);
+				const dashboardResponse = await fetch('/api/dashboard');
+				if (dashboardResponse.ok) {
+					const dashboard = await dashboardResponse.json();
+					renderDashboardData(dashboard);
+					loadAdminOverview(result.user);
+				}
+			} catch (error) {
+				loginError.textContent = error.message === 'Failed to fetch' ? 'Cannot reach the server. Start the Flask app and try again.' : error.message;
+			} finally { button.disabled = false; }
+		});
+
+		document.getElementById('logout-button').addEventListener('click', async function () {
+			await fetch('/api/logout', { method: 'POST' });
+			localStorage.removeItem('edusphere_user');
+			app.hidden = true;
+			loginScreen.hidden = false;
+			loginForm.reset();
+		});
+
+		document.getElementById('admin-notice-form').addEventListener('submit', async function (event) {
+			event.preventDefault();
+			const response = await fetch('/api/admin/notices', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title: document.getElementById('notice-title').value, body: document.getElementById('notice-body').value }) });
+			if (response.ok) {
+				document.getElementById('admin-notice-form').reset();
+				const dashboardResponse = await fetch('/api/dashboard');
+				if (dashboardResponse.ok) renderDashboardData(await dashboardResponse.json());
+			}
+		});
+
+		document.getElementById('tasks-list').addEventListener('change', async function (event) {
+			if (!event.target.matches('input[type="checkbox"]')) return;
+			const checkbox = event.target;
+			const task = checkbox.closest('.task');
+			task.classList.toggle('done', checkbox.checked);
+			if (!task.dataset.assignmentId) return;
+			try {
+				const response = await fetch('/api/assignments/' + task.dataset.assignmentId, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ completed: checkbox.checked }) });
+				if (!response.ok) throw new Error('Unable to save task');
+			} catch (error) {
+				checkbox.checked = !checkbox.checked;
+				task.classList.toggle('done', checkbox.checked);
+			}
+		});
+		document.querySelectorAll('.nav-item').forEach(function (item) {
+			item.addEventListener('click', function () { document.querySelector('.nav-item.active').classList.remove('active'); item.classList.add('active'); });
+		});
+	</script>
 </body>
 </html>
