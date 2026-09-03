@@ -122,6 +122,18 @@
 		const loginForm = document.getElementById('login-form');
 		const loginError = document.getElementById('login-error');
 
+		async function readJsonResponse(response) {
+			const body = await response.text();
+			if (!body.trim()) {
+				throw new Error(response.ok ? 'The server returned an empty response.' : 'Server error (' + response.status + ').');
+			}
+			try {
+				return JSON.parse(body);
+			} catch (error) {
+				throw new Error(response.ok ? 'The server returned an invalid response.' : 'Server error (' + response.status + ').');
+			}
+		}
+
 		function showDashboard(user) {
 			loginScreen.hidden = true;
 			app.hidden = false;
@@ -190,7 +202,7 @@
 			loginError.textContent = '';
 			try {
 				const response = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: document.getElementById('email').value, password: document.getElementById('password').value }) });
-				const result = await response.json();
+				const result = await readJsonResponse(response);
 				if (!response.ok) throw new Error(result.error || 'Unable to sign in');
 				localStorage.setItem('edusphere_user', JSON.stringify(result.user));
 				showDashboard(result.user);
