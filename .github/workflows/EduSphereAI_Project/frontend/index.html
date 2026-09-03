@@ -125,7 +125,7 @@
 		async function readJsonResponse(response) {
 			const body = await response.text();
 			if (!body.trim()) {
-				throw new Error(response.ok ? 'The server returned an empty response.' : 'Server error (' + response.status + ').');
+				throw new Error(response.ok ? 'The server returned an empty response.' : 'Backend is not running. Start Flask on http://127.0.0.1:5000.');
 			}
 			try {
 				return JSON.parse(body);
