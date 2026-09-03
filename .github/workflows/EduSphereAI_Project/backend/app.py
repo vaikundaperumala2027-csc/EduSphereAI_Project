@@ -270,4 +270,8 @@ def delete_notice(notice_id):
     return jsonify({"message": "Notice deleted"})
 
 if __name__ == '__main__':
-    app.run(debug=os.getenv("EDUSPHERE_DEBUG", "0") == "1")
+    app.run(
+        host=os.getenv("EDUSPHERE_HOST", "127.0.0.1"),
+        port=int(os.getenv("PORT", "5000")),
+        debug=os.getenv("EDUSPHERE_DEBUG", "0") == "1",
+    )
